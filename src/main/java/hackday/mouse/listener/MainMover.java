@@ -13,7 +13,7 @@ public class MainMover {
 
         FTPServer server = new FTPServer(); server.init();
         Thread.sleep(5000);
-        FTPClient client = new FTPClient("172.17.81.122");client.init();
+        FTPClient client = new FTPClient("172.17.82.33");client.init();
         FilePathCatcher filePathCatcher = new FilePathCatcher(client);
         filePathCatcher.init();
     }
