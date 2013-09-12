@@ -11,9 +11,6 @@ class FTPClient
     public DataOutputStream dout;
     public transferfileClient t;
 
-//    public static void main(String args[]) throws Exception
-//    {
-//    }
     public  void init() throws Exception {
         Socket soc=new Socket(serverIp,5217);
         transferfileClient t=new transferfileClient(soc);

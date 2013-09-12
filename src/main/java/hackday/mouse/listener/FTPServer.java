@@ -6,10 +6,6 @@ import java.util.*;
 
 public class FTPServer
 {
-//    public static void main(String args[]) throws Exception
-//    {
-//
-//    }
     public void init() throws IOException {
         ServerSocket soc=new ServerSocket(5217);
         System.out.println("FTP Server Started on Port Number 5217");
@@ -50,48 +46,20 @@ class transferfile extends Thread
         }
     }
 
-//    void ReceiveFile() throws Exception
-//    {
-//        String filename=din.readUTF();
-//        File f=new File(filename);
-//        String option;
-//
-//        dout.writeUTF("SendFile");
-//        option="Y";
-//
-//        if(option.compareTo("Y")==0)
-//        {
-//            FileOutputStream fout=new FileOutputStream(f);
-//            int ch;
-//            String temp;
-//            do
-//            {
-//                temp=din.readUTF();
-//                ch=Integer.parseInt(temp);
-//                if(ch!=-1)
-//                {
-//                    fout.write(ch);
-//                }
-//            }while(ch!=-1);
-//            fout.close();
-//            dout.writeUTF("File Send Successfully");
-//        }
-//        else
-//        {
-//            return;
-//        }
-//
-//    }
-
     public void run()
     {
+        try {
+            ClientSoc=serverSocket.accept();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         while(true)
         {
             try
             {
                 try
                 {
-                    ClientSoc=serverSocket.accept();
+
                     din=new DataInputStream(ClientSoc.getInputStream());
                     dout=new DataOutputStream(ClientSoc.getOutputStream());
                 }
@@ -108,12 +76,7 @@ class transferfile extends Thread
                         SendFile(FilePathCatcher.getCurrentFilePath());
                     continue;
                 }
-//                else if(Command.compareTo("SEND")==0)
-//                {
-//                    System.out.println("\tSEND Command Receiced ...");
-//                    ReceiveFile();
-//                    continue;
-//                }
+
             }
             catch(Exception ex)
             {
