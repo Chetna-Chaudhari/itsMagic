@@ -25,6 +25,8 @@ public class MainMover {
 
     public static void main(String[] args) throws Exception {
 
+        new AskServer().init();
+
         FTPServer server = new FTPServer(); server.init();
         Thread.sleep(5000);
 
