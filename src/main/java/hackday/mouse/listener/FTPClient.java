@@ -8,6 +8,8 @@ import java.util.*;
 class FTPClient
 {
     private final String serverIp;
+    public DataOutputStream dout;
+    public transferfileClient t;
 
     public static void main(String args[]) throws Exception
     {
@@ -17,6 +19,8 @@ class FTPClient
     public  void init() throws Exception {
         Socket soc=new Socket(serverIp,5217);
         transferfileClient t=new transferfileClient(soc);
+        this.dout = t.dout;
+        this.t = t;
         t.displayMenu();
     }
 
@@ -29,7 +33,7 @@ class transferfileClient
     Socket ClientSoc;
 
     DataInputStream din;
-    DataOutputStream dout;
+    public DataOutputStream dout;
     BufferedReader br;
     transferfileClient(Socket soc)
     {
@@ -72,22 +76,26 @@ class transferfileClient
         String fileName;
         System.out.println("Receiving File");
         fileName = din.readUTF();
-        File f=new File(fileName.substring(fileName.lastIndexOf("/")+1));
-        System.out.println(f.toString());
-        f.createNewFile();
-        FileOutputStream fout=new FileOutputStream(f);
-        int ch;
-        String temp;
-        do
-        {
-            temp=din.readUTF();
-            ch=Integer.parseInt(temp);
-            if(ch!=-1)
+
+        if (fileName!=null) {
+            File f=new File(fileName.substring(fileName.lastIndexOf("/")+1));
+            System.out.println(f.toString());
+            f.createNewFile();
+            FileOutputStream fout=new FileOutputStream(f);
+            int ch;
+            String temp;
+            do
             {
-                fout.write(ch);
-            }
-        }while(ch!=-1);
-        fout.close();
+                temp=din.readUTF();
+                ch=Integer.parseInt(temp);
+                if(ch!=-1)
+                {
+                    fout.write(ch);
+                }
+            }while(ch!=-1);
+            fout.close();
+        } else {
+        }
     }
 
     public void displayMenu() throws Exception
@@ -102,7 +110,7 @@ class transferfileClient
             if(filePath!=null && !filePath.isEmpty()){
                 //do nothign
                 choice = 3;
-            }else if(filePath!=null && filePath.isEmpty() ){
+            }else if(filePath==null || filePath.isEmpty() ){
                 choice = 2;
             }
 

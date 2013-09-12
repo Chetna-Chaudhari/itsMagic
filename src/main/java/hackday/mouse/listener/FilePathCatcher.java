@@ -12,14 +12,20 @@ import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseInputListener;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 
 public class FilePathCatcher implements NativeMouseInputListener {
 
         private static String currentFilePath = null;
+    private final FTPClient client;
 
-        public void nativeMouseClicked(NativeMouseEvent e) {
+    public FilePathCatcher(FTPClient client) {
+        this.client = client;
+    }
+
+    public void nativeMouseClicked(NativeMouseEvent e) {
             String script = "tell application \"Finder\"\n" +
                 "    select window of desktop\n" +
                 "    selection\n" +
@@ -56,15 +62,28 @@ public class FilePathCatcher implements NativeMouseInputListener {
             filename = fileNameComponents[fileNameComponents.length-1];
             filename.replaceAll(" ","\\ ");
             filePath=filePath+filename;
+            if(filename.equalsIgnoreCase("//")){
+                ///receive file
+                try {
+                    client.dout.writeUTF("GET");
+                    client.t.ReceiveFile();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+
+            } else
+
             if(!filePath.equals(currentFilePath)){
                 currentFilePath=filePath;
                 if(currentFilePath.equalsIgnoreCase("//")){
-                    currentFilePath=""; //TODO
+                    currentFilePath=null; //TODO
                 }
                 System.out.println(currentFilePath);
                 System.out.println("-----");
             }else{
-                currentFilePath = "";
+                currentFilePath = null;
             }
 
         }
@@ -86,23 +105,23 @@ public class FilePathCatcher implements NativeMouseInputListener {
         }
 
         public static void main(String[] args) {
-            try {
-
-                GlobalScreen.registerNativeHook();
-            }
-            catch (NativeHookException ex) {
-                System.err.println("There was a problem registering the native hook.");
-                System.err.println(ex.getMessage());
-
-                System.exit(1);
-            }
-            //MyMouseEventListener listener = new MyMouseEventListener();
-            //Construct the example object.
-            FilePathCatcher example = new FilePathCatcher();
-
-            //Add the appropriate listeners for the example object.
-            GlobalScreen.getInstance().addNativeMouseListener(example);
-            GlobalScreen.getInstance().addNativeMouseMotionListener(example);
+//            try {
+//
+//                GlobalScreen.registerNativeHook();
+//            }
+//            catch (NativeHookException ex) {
+//                System.err.println("There was a problem registering the native hook.");
+//                System.err.println(ex.getMessage());
+//
+//                System.exit(1);
+//            }
+//            //MyMouseEventListener listener = new MyMouseEventListener();
+//            //Construct the example object.
+//            FilePathCatcher example = new FilePathCatcher();
+//
+//            //Add the appropriate listeners for the example object.
+//            GlobalScreen.getInstance().addNativeMouseListener(example);
+//            GlobalScreen.getInstance().addNativeMouseMotionListener(example);
         }
 
         public void init(){
@@ -118,11 +137,10 @@ public class FilePathCatcher implements NativeMouseInputListener {
             }
             //MyMouseEventListener listener = new MyMouseEventListener();
             //Construct the example object.
-            FilePathCatcher example = new FilePathCatcher();
 
             //Add the appropriate listeners for the example object.
-            GlobalScreen.getInstance().addNativeMouseListener(example);
-            GlobalScreen.getInstance().addNativeMouseMotionListener(example);
+            GlobalScreen.getInstance().addNativeMouseListener(this);
+            GlobalScreen.getInstance().addNativeMouseMotionListener(this);
         }
 
     public static String getCurrentFilePath() {

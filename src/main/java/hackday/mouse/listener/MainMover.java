@@ -9,9 +9,12 @@ package hackday.mouse.listener;
  */
 public class MainMover {
     public static void main(String[] args) throws Exception {
-        FilePathCatcher filePathCatcher = new FilePathCatcher();
-        filePathCatcher.init();
+
+
         FTPServer server = new FTPServer(); server.init();
-        new FTPClient("172.17.82.33").init();
+        Thread.sleep(5000);
+        FTPClient client = new FTPClient("172.17.81.122");client.init();
+        FilePathCatcher filePathCatcher = new FilePathCatcher(client);
+        filePathCatcher.init();
     }
 }
