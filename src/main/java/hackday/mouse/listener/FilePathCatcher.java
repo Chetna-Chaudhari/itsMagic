@@ -14,15 +14,24 @@ import org.jnativehook.mouse.NativeMouseInputListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.List;
+import java.util.Map;
 
 
 public class FilePathCatcher implements NativeMouseInputListener {
 
-        private static String currentFilePath = null;
-    private final FTPClient client;
+    private static String currentFilePath = null;
+    private  FTPClient client;
+    private Map<String,FTPClient> host_client_map;
 
     public FilePathCatcher(FTPClient client) {
         this.client = client;
+    }
+
+    public FilePathCatcher(Map<String,FTPClient> clientsss) {
+        this.host_client_map = clientsss;
     }
 
     public void nativeMouseClicked(NativeMouseEvent e) {
@@ -64,14 +73,7 @@ public class FilePathCatcher implements NativeMouseInputListener {
             filePath=filePath+filename;
             if(filePath.equalsIgnoreCase("//")){
                 ///receive file
-                try {
-                    client.dout.writeUTF("GET");
-                    client.t.ReceiveFile();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
+                askAll();
                 return;
             }
 
@@ -125,6 +127,35 @@ public class FilePathCatcher implements NativeMouseInputListener {
 
     public static void setCurrentFilePath(String currentFilePath) {
         FilePathCatcher.currentFilePath = currentFilePath;
+    }
+
+    private void askAll(){
+        for(Map.Entry<String,FTPClient> entry: host_client_map.entrySet()){
+            try {
+                String name = "Ask";
+                Registry registry = LocateRegistry.getRegistry(entry.getKey());
+                Ask comp = (Ask) registry.lookup(name);
+                if(comp.askServer()){
+                    System.out.println("sending request...as ask return true for:"+entry.getKey());
+                    sendGetrequest(entry.getValue());
+                    System.out.println("sent request complient...as ask return true for:"+entry.getKey());
+                }
+
+            } catch (Exception e) {
+                System.err.println("ask exception:");
+                e.printStackTrace();
+            }
+        }
+    }
+    private void sendGetrequest(FTPClient theClient){
+        try {
+            theClient.dout.writeUTF("GET");
+            theClient.t.ReceiveFile();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
     }
 }
 
