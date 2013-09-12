@@ -11,7 +11,7 @@ public class MainMover {
     public static void main(String[] args) throws Exception {
         FilePathCatcher filePathCatcher = new FilePathCatcher();
         filePathCatcher.init();
-        new FTPServer().init();
-        new FTPClient("172.17.81.122").init();
+        FTPServer server = new FTPServer(); server.init();
+        new FTPClient("172.17.82.33").init();
     }
 }

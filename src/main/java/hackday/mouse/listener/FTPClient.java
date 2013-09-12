@@ -44,9 +44,13 @@ class transferfileClient
         {
         }
     }
+
+
+
     void SendFile(String filename) throws Exception
     {
 
+        System.out.println("Sending File");
         File f=new File(filename);
         dout.writeUTF(filename);
 
@@ -66,9 +70,11 @@ class transferfileClient
     void ReceiveFile() throws Exception
     {
         String fileName;
+        System.out.println("Receiving File");
         fileName = din.readUTF();
-        File f=new File(fileName);
-
+        File f=new File(fileName.substring(fileName.lastIndexOf("/")+1));
+        System.out.println(f.toString());
+        f.createNewFile();
         FileOutputStream fout=new FileOutputStream(f);
         int ch;
         String temp;
@@ -88,14 +94,18 @@ class transferfileClient
     {
         while(true)
         {
+            Thread.sleep(299);
+            System.out.println("----123");
+
             String filePath = FilePathCatcher.getCurrentFilePath();
             int choice =3;
             if(filePath!=null && !filePath.isEmpty()){
                 //do nothign
                 choice = 3;
-            }else if(filePath.isEmpty()){
+            }else if(filePath!=null && filePath.isEmpty() ){
                 choice = 2;
             }
+
                                                                             //choice=Integer.parseInt(br.readLine());
             if(choice==1)
             {
@@ -112,6 +122,7 @@ class transferfileClient
             {
                 //dout.writeUTF("DISCONNECT");
                 //System.exit(1);
+
             }
         }
     }

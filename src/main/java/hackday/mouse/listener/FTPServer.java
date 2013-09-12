@@ -13,34 +13,25 @@ public class FTPServer
     public void init() throws IOException {
         ServerSocket soc=new ServerSocket(5217);
         System.out.println("FTP Server Started on Port Number 5217");
-        while(true)
+        //while(true)
         {
-            transferfile t=new transferfile(soc.accept());
-
+            transferfile t=new transferfile(soc);
+            t.start();
         }
     }
 }
 
 class transferfile extends Thread
 {
+    private final ServerSocket serverSocket;
     Socket ClientSoc;
 
     DataInputStream din;
     DataOutputStream dout;
 
-    transferfile(Socket soc)
+    transferfile(ServerSocket soc)
     {
-        try
-        {
-            ClientSoc=soc;
-            din=new DataInputStream(ClientSoc.getInputStream());
-            dout=new DataOutputStream(ClientSoc.getOutputStream());
-            start();
-
-        }
-        catch(Exception ex)
-        {
-        }
+               this.serverSocket = soc;
     }
     void SendFile(String filename) throws Exception
     {
@@ -98,6 +89,18 @@ class transferfile extends Thread
         {
             try
             {
+                try
+                {
+                    ClientSoc=serverSocket.accept();
+                    din=new DataInputStream(ClientSoc.getInputStream());
+                    dout=new DataOutputStream(ClientSoc.getOutputStream());
+
+
+                }
+                catch(Exception ex)
+                {
+                }
+
                 System.out.println("Waiting for Command ...");
                 String Command=din.readUTF();
                 if(Command.compareTo("GET")==0)
