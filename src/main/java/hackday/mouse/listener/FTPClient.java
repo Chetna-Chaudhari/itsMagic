@@ -49,9 +49,9 @@ class transferfileClient
 
         fileName = din.readUTF();
 
-        if (fileName!=null) {
+        if (fileName!=null && !fileName.equals("NOFILE")) {
             System.out.println("Receiving File");
-            File f=new File(fileName.substring(fileName.lastIndexOf("/")+1));
+            File f=new File(System.getProperty("user.home") + "/Desktop" + "/" + fileName.substring(fileName.lastIndexOf("/")+1));
             System.out.println(f.toString());
             f.createNewFile();
             FileOutputStream fout=new FileOutputStream(f);

@@ -74,7 +74,9 @@ class transferfile extends Thread
                     System.out.println("\tGET Command Received ...");
                     if(FilePathCatcher.getCurrentFilePath()!=null)
                         SendFile(FilePathCatcher.getCurrentFilePath());
-                    continue;
+                    else
+                        dout.writeUTF("NOFILE");
+
                 }
 
             }
