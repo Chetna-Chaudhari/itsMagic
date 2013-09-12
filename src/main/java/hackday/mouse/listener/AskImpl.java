@@ -12,12 +12,13 @@ import java.rmi.RemoteException;
 public class AskImpl implements Ask{
     @Override
     public boolean askServer() throws RemoteException {
-//        if(FilePathCatcher.getCurrentFilePath() != null){
-//            return true;
-//        }
-//        else{
-//            return false;
-//        }
-        return true;
+        if(FilePathCatcher.getCurrentFilePath() != null){
+            System.out.println("Ask returns true: for file:"+FilePathCatcher.getCurrentFilePath());
+            return true;
+        }
+        else{
+            System.out.println("Ask returns false: for file:"+FilePathCatcher.getCurrentFilePath());
+            return false;
+        }
     }
 }
