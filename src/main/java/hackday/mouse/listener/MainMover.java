@@ -14,7 +14,6 @@ import java.util.Map;
  */
 public class MainMover {
 
-
     public static ArrayList<String> otherHosts = new ArrayList<String>();
     public static Map<String,FTPClient> host2ClientMap  = new HashMap<String, FTPClient>();
 
@@ -31,7 +30,7 @@ public class MainMover {
         Thread.sleep(5000);
 
         String myaddress = InetAddress.getLocalHost().getHostAddress() ;
-        otherHosts.remove(otherHosts.indexOf(myaddress));  //filter myself
+        otherHosts.remove(otherHosts.indexOf(myaddress));
 
         for(String host: otherHosts){
             FTPClient client = new FTPClient(host);

@@ -59,7 +59,6 @@ class transferfile extends Thread
             {
                 try
                 {
-
                     din=new DataInputStream(ClientSoc.getInputStream());
                     dout=new DataOutputStream(ClientSoc.getOutputStream());
                 }
