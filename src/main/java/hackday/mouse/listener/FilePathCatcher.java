@@ -41,11 +41,7 @@ public class FilePathCatcher implements NativeMouseInputListener {
                 "end tell";
             String line;
             String output = "";
-//            try {
-//               // Thread.sleep(2000);
-//            } catch (InterruptedException te) {
-//
-//            }
+
             try {
                 String[] cmd = { "/usr/bin/osascript", "-e", script };
                 Process p = Runtime.getRuntime().exec(cmd);

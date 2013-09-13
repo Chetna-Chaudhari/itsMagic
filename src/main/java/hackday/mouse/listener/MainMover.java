@@ -20,7 +20,7 @@ public class MainMover {
 
     static {
         otherHosts.add("172.17.82.33");
-        otherHosts.add("172.17.81.122");  //one is me the rest are not!!!
+        otherHosts.add("172.17.81.122");
     }
 
     public static void main(String[] args) throws Exception {
@@ -39,7 +39,6 @@ public class MainMover {
             host2ClientMap.put(host,client);
         }
 
-        //FTPClient client = new FTPClient("172.17.82.33");client.init();
         FilePathCatcher filePathCatcher = new FilePathCatcher(host2ClientMap);
         filePathCatcher.init();
     }
